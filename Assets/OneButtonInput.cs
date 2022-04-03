@@ -11,7 +11,13 @@ public class OneButtonInput : MonoBehaviour
     {
         
     }
-
+    public void NextLevel()
+    {
+        if (GameLoop._access.currentGameState == GameLoop.GameState.postgame)
+        {
+            GameLoop._access.NextLevel();
+        }
+    }
     // Update is called once per frame
     void Update()
     {
@@ -19,17 +25,10 @@ public class OneButtonInput : MonoBehaviour
         buttonUp = (Input.GetMouseButtonUp(0));
         if (buttonUp)
         {
-            //Here, the player can look at the score before going to the next level
-            if (GameLoop._access.currentGameState == GameLoop.GameState.postgame)
-            {
-                GameLoop._access.NextLevel();
-            }
-            else
-            {
-                //If we are launching the ball from pregame, it will start the game
+           //If we are launching the ball from pregame, it will start the game
                 if (GameLoop._access.currentGameState == GameLoop.GameState.pregame)
                     GameLoop._access.StartGame();
-            }
+            
         }
     }
 }
