@@ -4,43 +4,53 @@ using UnityEngine;
 using UnityEngine.UI;
 public class GameLoopUI : MonoBehaviour
 {
-    public GameObject winScreen, loseScreen;
-    public Text PlayerLives, PlayerScore, PlayerLevel;
-    private GameLoop gameLoop;
+    public GameObject pregameScreen, winScreen, loseScreen;
+    public Text PlayerScore, PlayerChain, PlayerLevel, LevelName;
+    public PlayerLivesUI playerLivesUI;
     // Start is called before the first frame update
     void Start()
     {
-        gameLoop = GetComponent<GameLoop>();
-        if (!gameLoop)
-            Debug.Log("Please add a gameloop component to this gameobject: GameLoopUI");
+
     }
-
-    // Update is called once per frame
-    void Update()
+    public void UpdateLevelUI(int _level, string _levelName)
     {
-
-        UpdateTextUI();
-        UpdateGameMessagesUI();
+        //Change the weird computer number into a number player's understand
+        PlayerLevel.text = "Lvl: " + (_level +1);
+        LevelName.text = _levelName;
     }
-    private void UpdateTextUI()
+    public void UpdateScoreUI(int _score)
     {
-        if (!gameLoop)
-            return;
-
-        PlayerLives.text = gameLoop.PlayerLives.ToString();
-        PlayerScore.text = gameLoop.PlayerScore.ToString() + " points";
-        PlayerLevel.text = "Lvl: "+ gameLoop.PlayerLevel.ToString();
+        PlayerScore.text = _score + " points";
     }
-
-    private void UpdateGameMessagesUI()
+    public void UpdateChainScoreUI(int _chain)
     {
-        if (!gameLoop)
-            return;
+        if (_chain > 1)
+            PlayerChain.text = _chain.ToString();
+        else
+            PlayerChain.text = "";
+    }
+    public void UpdateLivesUI(int _lives)
+    {
+        //PlayerLives.text = gameLoop.PlayerLives.ToString();
+        if (playerLivesUI)
+            playerLivesUI.UpdateLives(_lives);
+        else
+            Debug.Log("Please set playerLivesUI");
 
 
-        winScreen.SetActive(gameLoop.RemainingBricks < 1);
-
+    }
+    public void UpdateGameMessagesUI()
+    {
+        // Debug.Log("Updateing game messages");
+        pregameScreen.SetActive(
+             GameLoop._access.currentGameState == GameLoop.GameState.pregame);
+        winScreen.SetActive(
+            GameLoop._access.currentGameState == GameLoop.GameState.postgame 
+            && GameLoop._access.RemainingBricks.Count < 1);
         //Show the lose screen if the player lives are less than 1, and we are also not showing the win screen already (let's win before we lose)
-        loseScreen.SetActive(gameLoop.PlayerLives < 1 && !winScreen.activeSelf);
+        loseScreen.SetActive(
+            GameLoop._access.currentGameState == GameLoop.GameState.postgame 
+            && GameLoop._access.PlayerLives < 1 && !winScreen.activeSelf);
+        
     }
 }

@@ -13,14 +13,14 @@ public class Gunshot : MonoBehaviour
 
     // Update is called once per frame
     
-    void Update()
+    void FixedUpdate()
     {
         if (!isActiveAndEnabled)
             return;
         GetComponent<Rigidbody2D>().velocity = Vector3.up * Time.deltaTime * 500f;
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnCollisionEnter2D(Collision2D collision)
     {
-        Destroy(transform.gameObject);
+        transform.gameObject.SetActive(false);
     }
 }
